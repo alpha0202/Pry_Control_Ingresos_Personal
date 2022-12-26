@@ -398,12 +398,12 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Foto Visitante</h5>
+                <h5 class="modal-title fs-5" id="exampleModalLongTitle">Visitante Frecuente</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="limpiarDivModal()"></button>
             </div>
             <div class="modal-body text-center">
 
-                <div id="divImgV" class="col-auto justify-content-center text-center" style="display:block">
+                @*<div id="divImgV" class="col-auto justify-content-center text-center" style="display:block">
                     <div class="row">
                         <div class="col-md-12">
                             <img src="" width="350" height="350" id="imgEmpleadoCV" />
@@ -419,7 +419,7 @@
                     </div>
 
 
-                </div>
+                </div>*@
 
                 <div id="divFotoV" class="col-auto justify-content-center text-center" style="display:none">
                     <div class="row">
@@ -442,7 +442,13 @@
 
                 <br />
 
-                <div id="CorrectoV" class="col-auto justify-content-center text-justify"></div>
+                <div  class="container">
+                    <div class="row justify-content-start">
+
+                        <div  id="CorrectoV"></div>
+                    </div>
+
+                </div>
 
 
             </div>
@@ -451,8 +457,8 @@
 
             <div class="modal-footer">
 
-                <button type="button" class="btn btn-warning" id="btnEditarFotoV">Modificar Foto</button>
-                <button type="button" class="btn btn-secondary" onclick="$('#txtIdEntradaS').focus(); limpiarDivModal()" data-bs-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-warning" id="btnEditarFotoV">Modificar Foto</button>*@
+                <button type="button" class="btn btn-outline-success"  onclick="$('#txtIdEntradaS').focus(); limpiarDivModal()" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -720,7 +726,7 @@
 
                 else if (data.mensaje == "ENTRADA") {
 
-                   
+
 
                     swal({
                         title: "confirmación",
@@ -887,7 +893,7 @@
                                 getArl();
 
                                 $("#txtIdEntradaS").val("");
-                                $("#txtNombreNuevo").val("desde guardar visitante 1");
+                                $("#txtNombreNuevo").val("");
 
                                 $("#txtMotivoVisita").val("");
                                 $("#txtPlaca").val("");
@@ -933,7 +939,7 @@
                            if (data == "") {
 
                                $("#success-alert").alert();
-                               $("#success-alert").fadeTo(5000, 200).slideUp(1000, function () {
+                               $("#success-alert").fadeTo(3000, 200).slideUp(1000, function () {
                                    $("#success-alert").slideUp(1000);
                                });
 
@@ -949,12 +955,12 @@
                            } else {
                                return data;
                                alert(data);
-                             
+
                            }
 
-                         
 
-                     },
+
+                        },
 
                        error: function (request, message, error) {
                            document.getElementById("loader").style.display = "none";
@@ -1448,13 +1454,14 @@
 
         var tipoRegistro = data.mensaje;
 
-
-        document.getElementById("imgEmpleadoCV").src = data.imagen
+        var txtTitulo = '<div class="badge rounded-pill text-bg-success"" style="width: 10rem;">Registro Exitoso</div>';
+                 
+        
         document.getElementById("CorrectoV").style.display = "block";
-        $('#CorrectoV').append("<strong>Registro Exitoso</strong><br /> Se registró la " + tipoRegistro + " del visitante frecuente <strong>" + data.nombre + "</strong><br />", "identificación: <strong>" + data.cedula + "</strong><br />", "Empresa: <strong>" + data.empresa + "</strong><br />", "arl: <strong>" + data.arl + "</strong ><br />", "Empleado Autoriza: <strong>" + data.empleadoAutoriza + "</strong><br />", "Motivo Visita: <strong>" + data.motivoVisita +
+        $('#CorrectoV').append(txtTitulo, "</br> Se registró la " + tipoRegistro + " del visitante: <strong>" + data.nombre + "</strong><br />", "identificación: <strong>" + data.cedula + "</strong><br />", "Empresa: <strong>" + data.empresa + "</strong><br />", "arl: <strong>" + data.arl + "</strong ><br />", "Empleado Autoriza: <strong>" + data.empleadoAutoriza + "</strong><br />", "Motivo Visita: <strong>" + data.motivoVisita +
             "</strong > <br />", "Placa: <strong>" + data.placa + "</strong>" );
 
-        $('#btnEditarFotoV').show();
+       
         $('#modalregistradoEntradaVFrecuente2').modal("show");
 
     }
@@ -1530,7 +1537,7 @@
         //    }
         //});
 
-       
+
 
         $("#cboArl").change(function () {
             var arl = $("#cboArl option:selected").text();

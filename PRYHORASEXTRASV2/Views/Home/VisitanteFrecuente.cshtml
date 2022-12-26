@@ -227,7 +227,7 @@
             <div class="row">
 
                 <div class="col-lg-12">
-                    <table class="table nowrap table-bordered" id="TResultado">
+                    <table class="table table-bordered cell-border" id="TResultado" style="width:100%">
                         <thead>
                             <tr>
 
@@ -304,30 +304,64 @@
                    jQuery.each(data, function (index, itemData) {
 
                        var frecuenteV = "";
+                       var color = "";
 
                        if (itemData.Frecuente) {
                            frecuenteV ="Habilitado"
                        } else {
-                           frecuenteV = "Fuera de rango"
+                           frecuenteV = "Fuera de rango";
+                           color = "#dea12f";
                        }
 
 
                        var htmlTags = htmlTags + '<tr>' +
-                           '<td>' + itemData.cedula  + '</td>' +
-                           '<td>' + itemData.nombre + '</td>' +
-                           '<td>' + itemData.arl + '</td>' +
-                           '<td>' + itemData.empleadoAutoriza + '</td>' +
-                           '<td>' + itemData.motivoVisita + '</td>' +
-                           '<td>' + itemData.empresa + '</td>' +
-                           '<td>' + itemData.placa + '</td>' +
-                           '<td>' + itemData.fechaIniFrecuente + '</td>' +
-                           '<td>' + itemData.fechaFinFrecuente + '</td>' +
-                           '<td>' + frecuenteV + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.cedula  + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.nombre + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.arl + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.empleadoAutoriza + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.motivoVisita + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.empresa + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.placa + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.fechaIniFrecuente + '</td>' +
+                           '<td style = "background-color:' + color + '">' + itemData.fechaFinFrecuente + '</td>' +
+                           '<td style = "background-color:' + color + '">' + frecuenteV + '</td>' +
                            '</tr>';
 
                        $('#TResultado tbody').append(htmlTags);
 
                    });
+
+                      table = $('#TResultado').DataTable();
+                      table.destroy();
+
+                      $('#TResultado').DataTable({
+                          "scrollY": "500px",
+                          "paging": true,
+                          "scrollX": false,
+                          "scrollCollapse": true,
+                          dom: 'Bfrtip',
+                          buttons: [
+                              {
+
+                                  extend:'excel',
+                                  className: "btn btn-primary"
+
+                              },
+                              
+                          ],
+                          //"order": [[1, "asc"]],
+                          //columnDefs: [{
+                          //    orderable: false,
+                          //    //className: 'select-checkbox',
+                          //    //style: 'cell-border',
+                          //    //targets: 0
+                          //}],
+                          //select: {
+                          //    style: 'so',
+                          //    selector: 'td:first-child'
+                          //}
+
+                      });
 
               },
 

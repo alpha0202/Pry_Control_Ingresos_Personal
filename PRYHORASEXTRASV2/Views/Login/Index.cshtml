@@ -23,6 +23,10 @@
     <!-- Custom styles for this template-->
     <link href="~/css/sb-admin-2.css" rel="stylesheet" />
     <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
     <style>
         .loader {
             position: fixed;
@@ -58,7 +62,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Bienvenid@@!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" action="#">
                                         <div class="form-group">
                                             <input type="text" class="form-control form-control-user"
                                                    id="txtUsuario" 
@@ -72,9 +76,9 @@
                                         </div>
 
 
-                                        <a class="btn btn-primary btn-user btn-block" id="btnIngresar">
+                                        <button type="button" class="btn btn-primary btn-user btn-block" id="btnIngresar">
                                             Ingresar
-                                        </a>
+                                        </button>
                                         <hr>
 
 

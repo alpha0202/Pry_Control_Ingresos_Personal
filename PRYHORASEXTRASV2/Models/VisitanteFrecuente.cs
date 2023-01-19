@@ -7,7 +7,7 @@ namespace CONTROLDEINGRESOS.Models
 {
     public class VisitanteFrecuente
     {
-        public decimal cedula { get; set; }
+        public Int64 cedula { get; set; }
         public string nombre { get; set; }
         public string arl { get; set; }
         public string empleadoAutoriza { get; set; }

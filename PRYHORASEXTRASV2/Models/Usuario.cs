@@ -17,6 +17,7 @@ namespace PRYHORASEXTRASV2.Models
         public int sedeId { get; set; }
         public string porteria { get; set; }
         public int porteriaID { get; set; }
+       // public int? codigoPerfil { get; set; }
 
 
         public static Usuario RecuperarUsuario(string usuario)
@@ -40,9 +41,11 @@ namespace PRYHORASEXTRASV2.Models
                 user.password = dr["password"].ToString();
 
                 user.porteria = dr["descripcionPorteria"].ToString();
-                user.porteriaID = int.Parse(dr["RowIdPorteria"].ToString());
+                 user.porteriaID = int.Parse(dr["RowIdPorteria"].ToString());
                 user.sede = dr["descripcionSede"].ToString();
                 user.sedeId = int.Parse( dr["RowIdSede"].ToString());
+                //user.codigoPerfil = int.Parse(dr["codigoPerfil"].ToString());
+
 
             }
 

@@ -115,10 +115,6 @@ namespace PRYHORASEXTRASV2.Controllers
 
 
         }
-        public ActionResult prueba()
-        {
-            return View();
-        }
 
 
 
@@ -127,55 +123,69 @@ namespace PRYHORASEXTRASV2.Controllers
         [HttpPost]
         public ActionResult GetReporteVisitantesFrecuentes()
         {
-            Usuario user = new Usuario();
-            user = Usuario.RecuperarUsuario(Request.Cookies["CIuser"].Value);
-
-            List<VisitanteFrecuente> respuesta = new List<VisitanteFrecuente>();
-
-            DataTable dt = new DataTable();
-           
-            dt = Datos.SPObtenerDataTable("SP_ReporteVisitantesFrecuentes");
-
-            foreach (DataRow dr in dt.Rows)
+            try
             {
-                VisitanteFrecuente res = new VisitanteFrecuente();
-                res.cedula = int.Parse(dr["cedula"].ToString());
-                res.nombre = dr["nombre"].ToString();
-                res.arl = dr["arl"].ToString();
-                res.empleadoAutoriza = dr["empleadoAutoriza"].ToString();
-                res.motivoVisita = dr["motivoVisita"].ToString();
-                res.placa = dr["placa"].ToString();
-                res.empresa = dr["empresa"].ToString();
-                res.Frecuente = bool.Parse(dr["frecuente"].ToString());
-                
+                List<VisitanteFrecuente> respuesta = new List<VisitanteFrecuente>();
+                Usuario user = new Usuario();
+                user = Usuario.RecuperarUsuario(Request.Cookies["CIuser"].Value);
 
-                if ( dr["fechaIniFrecuente"].ToString() != "" & dr["fechaFinFrecuente"].ToString() != "")
+
+
+
+                DataTable dt = new DataTable();
+
+                dt = Datos.SPObtenerDataTable("SP_ReporteVisitantesFrecuentes");
+
+                foreach (DataRow dr in dt.Rows)
                 {
-                    res.fechaIniFrecuente = DateTime.Parse(dr["fechaIniFrecuente"].ToString()).ToString("dd/MM/yyyy");
-                    res.fechaFinFrecuente = DateTime.Parse(dr["fechaFinFrecuente"].ToString()).ToString("dd/MM/yyyy");
 
-                    if ( DateTime.Parse(dr["fechaFinFrecuente"].ToString()) >= DateTime.Now  & DateTime.Parse(dr["fechaIniFrecuente"].ToString()) <= DateTime.Now )
+                    VisitanteFrecuente res = new VisitanteFrecuente();
+                    res.cedula = Int64.Parse(dr["cedula"].ToString());
+                    res.nombre = dr["nombre"].ToString();
+                    res.arl = dr["arl"].ToString();
+                    res.empleadoAutoriza = dr["empleadoAutoriza"].ToString();
+                    res.motivoVisita = dr["motivoVisita"].ToString();
+                    res.placa = dr["placa"].ToString();
+                    res.empresa = dr["empresa"].ToString();
+                    res.Frecuente = bool.Parse(dr["frecuente"].ToString());
+
+
+                    if (dr["fechaIniFrecuente"].ToString() != "" & dr["fechaFinFrecuente"].ToString() != "")
                     {
-                        res.Frecuente = true;
+                        res.fechaIniFrecuente = DateTime.Parse(dr["fechaIniFrecuente"].ToString()).ToString("dd/MM/yyyy");
+                        res.fechaFinFrecuente = DateTime.Parse(dr["fechaFinFrecuente"].ToString()).ToString("dd/MM/yyyy");
+
+                        if (DateTime.Parse(dr["fechaFinFrecuente"].ToString()) >= DateTime.Now & DateTime.Parse(dr["fechaIniFrecuente"].ToString()) <= DateTime.Now)
+                        {
+                            res.Frecuente = true;
+                        }
+                        else
+                        {
+                            res.Frecuente = false;
+
+                        }
                     }
                     else
                     {
                         res.Frecuente = false;
-                        
+                        res.fechaIniFrecuente = "Sin fecha";
+                        res.fechaFinFrecuente = "Sin fecha";
                     }
-                }
-                else
-                {
-                    res.Frecuente = false;
-                    res.fechaIniFrecuente = "Sin fecha";
-                    res.fechaFinFrecuente = "Sin fecha";
+
+                    respuesta.Add(res);
+
                 }
 
-                respuesta.Add(res);
+                return Json(respuesta, JsonRequestBehavior.AllowGet);
 
             }
 
-            return Json(respuesta, JsonRequestBehavior.AllowGet);
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", new { Error = ex.Message });
+            }
+
+
         }
 
 
@@ -193,6 +203,11 @@ namespace PRYHORASEXTRASV2.Controllers
         {
             try
             {
+
+                Usuario user = new Usuario();
+                user = Usuario.RecuperarUsuario(Request.Cookies["CIuser"].Value);
+
+
                 if (Request.Files["FileUpload1"].ContentLength > 0)
                 {
                     string extension = System.IO.Path.GetExtension(Request.Files["FileUpload1"].FileName).ToLower();
@@ -223,14 +238,16 @@ namespace PRYHORASEXTRASV2.Controllers
                         else if (extension.Trim() == ".xls")
                         {
                             connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + path1 + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=2\"";
-                            DataTable dt = Utility.ConvertXSLXtoDataTable(path1, connString);
+                            DataTable dt = Utility.ConvertXSLXtoDataTable(path1, connString, user.usuario);
                             ViewBag.Data = dt;
                         }
                         else if (extension.Trim() == ".xlsx")
                         {
                             connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + path1 + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=2\"";
-                            DataTable dt = Utility.ConvertXSLXtoDataTable(path1, connString);
+                            DataTable dt = Utility.ConvertXSLXtoDataTable(path1, connString, user.usuario);
+
                             ViewBag.Data = dt;
+
 
                         }
 
@@ -242,14 +259,17 @@ namespace PRYHORASEXTRASV2.Controllers
                     }
 
                 }
+
+
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                //throw new Exception(ex.Message);
+                //return RedirectToAction("Error", new { Error = ex.Message });
             }
 
-          
+
 
             return View();
 
@@ -866,17 +886,17 @@ namespace PRYHORASEXTRASV2.Controllers
                     {
                         string html = "<p>Cordial saludo,</p>" +
                             " <h1>Autorización Ingreso Visitante</h1> " +
-                             "    <p>Se autorizó el ingreso al visitante: "+cedula+"-"+nombre+" </p>  " +
-                             "    <p>Empresa: "+empresa+" </p>  " +
-                              "   <p>Motivo Visita: "+motivo+" </p>  " +
+                             "    <p>Se autorizó el ingreso al visitante: " + cedula + "-" + nombre + " </p>  " +
+                             "    <p>Empresa: " + empresa + " </p>  " +
+                              "   <p>Motivo Visita: " + motivo + " </p>  " +
                              "<div class='gmail_default'></div>" +
                              "<div class='gmail_default'>Atentamente,</div><br />" +
                              "<div class='gmail_default'></div>" +
                              "<div class='gmail_default'><b>TECNOLOG&Iacute;A - ALIAR S.A.</b></div>";
-                                AlternateView htmlView =
-                                    AlternateView.CreateAlternateViewFromString(html,
-                                                            Encoding.UTF8,
-                                                            MediaTypeNames.Text.Html);
+                        AlternateView htmlView =
+                            AlternateView.CreateAlternateViewFromString(html,
+                                                    Encoding.UTF8,
+                                                    MediaTypeNames.Text.Html);
                         EnviarCorreoAlter(htmlView, correo, "Ingreso Visitante");
                     }
 
@@ -1117,7 +1137,7 @@ namespace PRYHORASEXTRASV2.Controllers
                     {
                         if (visitante.frecuente == true & dr["fechaIniFrecuente"].ToString() != "" & dr["fechaFinFrecuente"].ToString() != "")
                         {
-                            if (DateTime.Parse(dr["fechaFinFrecuente"].ToString()) >= DateTime.Now &  DateTime.Parse(dr["fechaIniFrecuente"].ToString()) <= DateTime.Now )
+                            if (DateTime.Parse(dr["fechaFinFrecuente"].ToString()) >= DateTime.Now & DateTime.Parse(dr["fechaIniFrecuente"].ToString()) <= DateTime.Now)
                             {
                                 string respuesta = guardarEntradav(visitante.cedula.ToString(), user.usuario, visitante.nombre, visitante.arl, visitante.empleadoAutoriza, visitante.motivoVisita, visitante.placa, visitante.empresa);
                                 if (!string.IsNullOrEmpty(respuesta))

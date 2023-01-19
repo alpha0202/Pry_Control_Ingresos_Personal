@@ -8,6 +8,20 @@ using System.Linq;
 using System.Web;
 using System.Data.OleDb;
 using CapaDatos;
+using Microsoft.AspNetCore.Mvc;
+using CONTROLDEINGRESOS.Models;
+using PRYHORASEXTRASV2.Models;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
+using System.Text;
+using System.Web.Mvc;
+using ActionResult = System.Web.Mvc.ActionResult;
+using HttpPostAttribute = System.Web.Mvc.HttpPostAttribute;
+using NonActionAttribute = System.Web.Mvc.NonActionAttribute;
+using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
+using CONTROLDEINGRESOS.Clases;
 
 namespace CONTROLDEINGRESOS.Models
 {
@@ -20,8 +34,9 @@ namespace CONTROLDEINGRESOS.Models
          para su mejor manipulación y lectura.
         **/
 
-
+   
         private decimal cedula { get; set; }
+       
         private string nombre { get; set; }
         private string arl { get; set; }
         private string empleadoAutoriza { get; set; }
@@ -66,8 +81,10 @@ namespace CONTROLDEINGRESOS.Models
             return dt;
         }
 
+
+
         //método que leer las hojas del archivo excel, saca los campos, las filas y las incluye en un dataset.
-        public static DataTable ConvertXSLXtoDataTable(string strFilePath, string connString)
+        public static DataTable ConvertXSLXtoDataTable(string strFilePath, string connString, string usuario)
         {
             OleDbConnection oledbConn = new OleDbConnection(connString);
             Utility utilityProp = new Utility();
@@ -75,7 +92,10 @@ namespace CONTROLDEINGRESOS.Models
             DataSet ds = new DataSet();
             try
             {
-               
+              
+
+
+
                 oledbConn.Open();
                 using (DataTable Sheets = oledbConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null))
                 {
@@ -102,107 +122,124 @@ namespace CONTROLDEINGRESOS.Models
 
 
 
-                    List<VisitanteFrecuente> listVisitanteFrecuente = new List<VisitanteFrecuente>();
+                    //List<VisitanteFrecuente> listVisitanteFrecuente = new List<VisitanteFrecuente>();
 
                     foreach (DataRow row in dt.Rows)
                     {
-                        VisitanteFrecuente visitanteFre = new VisitanteFrecuente();
-                       
+                        // VisitanteFrecuente visitanteFre = new VisitanteFrecuente();
+
+                        //Cedula
+                        if (string.IsNullOrEmpty(row[0].ToString()))
+                        {
+                            utilityProp.cedula = 0;
+                            //throw new Exception("El campo cedula no puede estar vacío");
+                        }
+                        else
+                        {
+                            string idFilter = row[0].ToString();
+                            idFilter = idFilter.CleanId();
+
+                            utilityProp.cedula = Int64.Parse(idFilter);                        
+                        }
+
                         //cedula
-                        int valor;
-                        bool result;
-                        result = int.TryParse(row[0].ToString(), out valor);
-                        if (result == false)
-                        {
-                            throw new Exception("El campo cedula solo recibe números");
-                        }
+                        //int valor;
+                        //bool result;
+                        //result = int.TryParse(row[0].ToString(), out valor);
+                        //if (result == false)
+                        //{
+                        //    throw new Exception("El campo cedula solo recibe números");
+                        //}
                         
-                        if (int.Parse(row[0].ToString()) > 0)
-                        {
-                            utilityProp.cedula = int.Parse(row[0].ToString());
-                        }
-                        else { 
-                        throw new Exception("El campo cedula no puede estar vacío") ;  
-                        }
+                        //if (int.Parse(row[0].ToString()) > 0)
+                        //{
+                        //    utilityProp.cedula = int.Parse(row[0].ToString());
+                        //}
+                        //else { 
+                        //throw new Exception("El campo cedula no puede estar vacío") ;  
+                        //}
                                                                     
 
 
                         //nombre
-                        if (string.IsNullOrEmpty(row[1].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[1].ToString()))
                         {
-                            throw new Exception("El campo nombre no puede estar vacío");
+                            utilityProp.nombre = "VACÍO";
+                            //throw new Exception("El campo nombre no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.nombre = row[1].ToString().ToUpper().ToUpper();
+                            string nameFilter = row[1].ToString();
+                            nameFilter =  nameFilter.CleanName();
+
+                            utilityProp.nombre = nameFilter.ToUpper();
+                                                   
                         }
 
                         //arl
-                        //if (string.IsNullOrEmpty(row[2].ToString().ToUpper().ToUpper()))
-                        //{
-                        //    throw new Exception("El campo arl no puede estar vacío");
-                        //}
-                        //else
-                        //{
-                        //    utilityProp.arl = row[2].ToString().ToUpper().ToUpper();
-                        //}
-                        utilityProp.arl = row[2].ToString().ToUpper().ToUpper();
+                        utilityProp.arl = row[2].ToString().ToUpper();
 
 
                         //empleadoAutoriza
-                        if (string.IsNullOrEmpty(row[3].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[3].ToString()))
                         {
-                            throw new Exception("El campo empleado autoriza no puede estar vacío");
+                            utilityProp.empleadoAutoriza = "VACÍO";
+                            //throw new Exception("El campo empleado autoriza no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.empleadoAutoriza = row[3].ToString().ToUpper().ToUpper();
+                            utilityProp.empleadoAutoriza = row[3].ToString().ToUpper();
                         }
 
+
                         //motivoVisita
-                        if (string.IsNullOrEmpty(row[4].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[4].ToString()))
                         {
-                            throw new Exception("El campo motivo visita no puede estar vacío");
+                            utilityProp.motivoVisita = "VACÍO";
+                            //throw new Exception("El campo motivo visita no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.motivoVisita = row[4].ToString().ToUpper().ToUpper();
+                            utilityProp.motivoVisita = row[4].ToString().ToUpper();
                         }
 
                         //empresa
-                        if (string.IsNullOrEmpty(row[5].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[5].ToString()))
                         {
-                            throw new Exception("El campo empresa visita no puede estar vacío");
+                            utilityProp.empresa = "VACÍO";
+                            //throw new Exception("El campo empresa visita no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.empresa = row[5].ToString().ToUpper().ToUpper();
+                            utilityProp.empresa = row[5].ToString().ToUpper();
                         }
 
 
                         //placa (no es campo obligatorio)
-                         utilityProp.placa = row[6].ToString().ToUpper().ToUpper();
+                         utilityProp.placa = row[6].ToString().ToUpper();
                        
                        
 
                         //fecha inicia
-                        if (string.IsNullOrEmpty(row[7].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[7].ToString()))
                         {
-                            throw new Exception("El campo fecha inicio no puede estar vacío");
+                            utilityProp.fechaFinFrecuente = "SIN FECHA";
+                            //throw new Exception("El campo fecha inicio no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.fechaIniFrecuente = DateTime.Parse(row[7].ToString().ToUpper()).ToString("dd/MM/yyyy");
+                            utilityProp.fechaIniFrecuente = DateTime.Parse(row[7].ToString()).ToString("dd/MM/yyyy");
                         }
 
                         //fecha final
-                        if (string.IsNullOrEmpty(row[8].ToString().ToUpper().ToUpper()))
+                        if (string.IsNullOrEmpty(row[8].ToString()))
                         {
-                            throw new Exception("El campo fecha fin no puede estar vacío");
+                            utilityProp.fechaIniFrecuente = "SIN FECHA";
+                            //throw new Exception("El campo fecha fin no puede estar vacío");
                         }
                         else
                         {
-                            utilityProp.fechaFinFrecuente = DateTime.Parse(row[8].ToString().ToUpper()).ToString("dd/MM/yyyy");
+                            utilityProp.fechaFinFrecuente = DateTime.Parse(row[8].ToString()).ToString("dd/MM/yyyy");
                         }
                        
                        
@@ -210,6 +247,7 @@ namespace CONTROLDEINGRESOS.Models
                         LstParametros.Add(new Parametros("@cedula", utilityProp.cedula, SqlDbType.VarChar));
                         LstParametros.Add(new Parametros("@nombre", utilityProp.nombre, SqlDbType.VarChar));
                         LstParametros.Add(new Parametros("@arl", utilityProp.arl, SqlDbType.VarChar));
+                        LstParametros.Add(new Parametros("@Usuario", usuario, SqlDbType.VarChar));
                         LstParametros.Add(new Parametros("@empleadoAutoriza", utilityProp.empleadoAutoriza, SqlDbType.VarChar));
                         LstParametros.Add(new Parametros("@motivo", utilityProp.motivoVisita, SqlDbType.VarChar));
                         LstParametros.Add(new Parametros("@empresa", utilityProp.empresa, SqlDbType.VarChar));
@@ -257,12 +295,14 @@ namespace CONTROLDEINGRESOS.Models
             catch(Exception ex)
             {
                 // throw new Exception(ex.Message);
-               
+
+                throw new ArgumentException(ex.Message);
             }
             finally
             {
 
                 oledbConn.Close();
+                oledbConn.Dispose();
             } 
 
             return dt;

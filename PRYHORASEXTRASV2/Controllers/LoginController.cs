@@ -108,6 +108,7 @@ namespace PRYHORASEXTRASV2.Controllers
                 }
 
                 HttpCookie cookie = new HttpCookie("CIuser", usuario);
+                //cookie.Expires = DateTime.Now.AddHours(3);
                 cookie.Expires = DateTime.Now.AddDays(1d);
                 Response.Cookies.Add(cookie);
 
@@ -120,6 +121,27 @@ namespace PRYHORASEXTRASV2.Controllers
             }
 
         }
+
+
+        [HttpPost]
+        //desconectar sesión
+        public ActionResult SignOut()
+        {
+            //Usuario user = new Usuario();
+            //user = Usuario.RecuperarUsuario(usuario);
+
+            HttpCookie cookie = new HttpCookie("CIuser");
+            //cookie.Expires = DateTime.Now.AddHours(3);
+            cookie.Expires = DateTime.Now.AddDays(-1d);
+            Response.Cookies.Add(cookie);
+
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+
 
         //[NonAction]
         //public void EnviarCorreoAlter(AlternateView html, string email, string asunto)

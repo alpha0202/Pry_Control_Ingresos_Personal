@@ -103,7 +103,7 @@
 
 
 
-<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery-3.6.1.min.js"></script>
 <script type="text/javascript">
 
     function cargarSedes() {
@@ -190,8 +190,8 @@
                                   table.destroy();
 
                                   $('#TResultado').DataTable({
-                                      "scrollY": "400px",
-                                      "paging": false,
+                                      "scrollY": "500px",
+                                      "paging": true,
                                       "scrollX": true,
                                       "scrollCollapse": true,
                                       dom: 'Bfrtip',
@@ -199,6 +199,7 @@
                                            'excel'
                                       ],
                                       "order": [[2, "asc"]]
+                                      //responsive: true
                                       //columnDefs: [{
                                       //    orderable: false,
                                       //    className: 'select-checkbox',

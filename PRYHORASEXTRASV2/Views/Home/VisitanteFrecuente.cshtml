@@ -6,99 +6,14 @@
 }
 
 <h2>@ViewBag.Title</h2>
-
-@*<style type="text/css">
-        /* Generic Styling, for Desktops/Laptops */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        /* Zebra striping */
-        tr:nth-of-type(odd) {
-            background: #eee;
-        }
-
-        th {
-            background: #333;
-            color: white;
-            font-weight: bold;
-        }
-
-        td, th {
-            padding: 6px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-        /*
-        Max width before this PARTICULAR table gets nasty
-        This query will take effect for any screen smaller than 760px
-        and also iPads specifically.
-        */
-        @@media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
-            /* Force table to not be like tables anymore */
-
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-                /* Hide table headers (but not display: none;, for accessibility) */
-                thead tr {
-                    position: absolute;
-                    top: -9999px;
-                    left: -9999px;
-                }
-
-            tr {
-                border: 1px solid #ccc;
-            }
-
-            td {
-                /* Behave  like a "row" */
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-            }
-
-                td:before {
-                    /* Now like a table header */
-                    position: absolute;
-                    /* Top/left values mimic padding */
-                    top: 6px;
-                    left: 6px;
-                    width: 45%;
-                    padding-right: 10px;
-                    white-space: nowrap;
-                }
-                /*
-         Label the data
-         */
-                td:before {
-                    content: attr(data-title);
-                }
-        }
-    </style>*@
 @Scripts.Render("~/bundles/jquery")
 
 
-@*@using (Html.BeginForm("ImportExcel", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
-<!--<![endif]-->
+
 @using (Html.BeginForm("VisitanteFrecuente", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 
 {
-    <!--<table>
-        <tr>
-            <td>Archivo Excel</td>
-            <td><input type="file" class="btn btn-primary" id="FileUpload1" name="FileUpload1" /></td>
-        </tr>
-        <tr>
-            <td></td>-->
-    @*<td><input type="submit" id="Submit" name="Submit" value="Submit" /></td>*@
-    <!--</tr>
-        <tr>
-            <td></td>
-            <td><input class="btn btn-secondary" type="submit" id="Upload" name="Upload" value="Carguar" /></td>
-        </tr>
-    </table>-->
+
     <div class="container-fluid">
 
         <div class="row">
@@ -111,7 +26,7 @@
                             <p class="card-text">Puede realizar carga masiva de visitantes frecuentes, registrados dentro de un archivo excel.</p>
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" name="FileUpload1" id="FileUpload1" aria-label="Upload">
-                                <button class="btn btn-outline-primary" type="submit" id="Upload" name="Upload" value="Cargar"  >Cargar <i class="bi bi-file-earmark-arrow-up-fill"></i></button>
+                                <button class="btn btn-outline-primary" type="submit" id="Upload" name="Upload" value="Cargar">Cargar <i class="bi bi-file-earmark-arrow-up-fill"></i></button>
                             </div>
 
                         </div>
@@ -140,8 +55,6 @@
                 </div>
 
 
-
-
             </div>
 
         </div>
@@ -151,69 +64,7 @@
 
 }
 
-<div class="row">
-    @*<table id="">
 
-            @if (ViewBag.Data != null)
-            {
-                <thead>
-
-                    @foreach (DataColumn column in (ViewBag.Data as System.Data.DataTable).Columns)
-                    {
-                    <th>@column.ColumnName.ToUpper()</th>
-
-
-                }
-                    </thead>
-                    if ((ViewBag.Data as System.Data.DataTable).Rows.Count > 0)
-                    {
-                        foreach (DataRow dr in (ViewBag.Data as System.Data.DataTable).Rows)
-                        {
-
-                            <tr>
-
-                                @foreach (DataColumn column in (ViewBag.Data as System.Data.DataTable).Columns)
-                                {
-                                    <td data-title='@column.ColumnName'>
-
-                                        @dr[column].ToString()&nbsp;
-                                    </td>
-                                }
-
-                            </tr>
-
-                        }
-
-                    }
-                    else
-                    {
-                        int count = (ViewBag.Data as System.Data.DataTable).Columns.Count;
-                        <tr>
-
-                            <td colspan='@count' style="color:red;">
-
-                                No Data Found.
-                            </td>
-                        </tr>
-
-                    }
-
-                }
-                else
-                {
-                    if (ViewBag.Error != null)
-                    {
-                        <tr>
-                            <td style="color:red;">
-
-                                @(ViewBag.Error != null ? ViewBag.Error.ToString() : "")
-                            </td>
-
-                        </tr>
-                    }
-                }
-        </table>*@
-</div>
 <br />
 <div class="row">
 
@@ -222,8 +73,8 @@
 
         <div class="card">
             @*<div class="col-md-4">
-                <button type="button" class="btn btn-primary" id="btnRefrescar">CONSULTAR</button>
-            </div>*@
+                    <button type="button" class="btn btn-primary" id="btnRefrescar">CONSULTAR</button>
+                </div>*@
             <div class="row">
 
                 <div class="col-lg-12">
@@ -267,25 +118,8 @@
 
 
 
-<script src="~/Scripts/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/jquery-3.6.1.min.js"></script>
 <script type="text/javascript">
-    //var myMessages = ['info', 'warning', 'error', 'success'];
-    //function hideAllMessages() {
-    //    var messagesHeights = new Array(); // this array will store height for each
-
-    //    for (i = 0; i < myMessages.length; i++) {
-    //        messagesHeights[i] = $('.' + myMessages[i]).outerHeight(); // fill array
-    //        $('.' + myMessages[i]).css('top', -messagesHeights[i]); //move element outside viewport
-    //    }
-    //}
-    //function showMessage(type) {
-    //    $('.' + type + '-trigger').click(function () {
-    //        hideAllMessages();
-    //        $('.' + type).animate({ top: "0" }, 50000);
-    //    });
-    //}
-
-
 
     function CargarVisitanteFrecuente() {
 
@@ -293,82 +127,98 @@
           table = $('#TResultado').DataTable();
           table.destroy();
           $('#TResultado tbody').html("");
-           $.ajax({
+        $.ajax({
             url: '@Url.Action("GetReporteVisitantesFrecuentes", "Home")',
             data: {},
             crossDomain: true,
             type: 'POST',
-              dataType: 'json',
-              success: function (data) {
-                   document.getElementById("loader").style.display = "none";
-                   jQuery.each(data, function (index, itemData) {
+            dataType: 'json',
+            success: function (data) {
+                document.getElementById("loader").style.display = "none";
+                if (data !="0") {
 
-                       var frecuenteV = "";
-                       var color = "";
+                    jQuery.each(data, function (index, itemData) {
 
-                       if (itemData.Frecuente) {
-                           frecuenteV ="Habilitado"
-                       } else {
-                           frecuenteV = "Fuera de rango";
-                           color = "#dea12f";
-                       }
+                        var frecuenteV = "";
+                        var color = "";
+
+                        if (itemData.Frecuente) {
+                            frecuenteV = "Habilitado"
+                        } else {
+                            frecuenteV = "Fuera de rango";
+                            color = "#dea12f";
+                        }
 
 
-                       var htmlTags = htmlTags + '<tr>' +
-                           '<td style = "background-color:' + color + '">' + itemData.cedula  + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.nombre + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.arl + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.empleadoAutoriza + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.motivoVisita + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.empresa + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.placa + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.fechaIniFrecuente + '</td>' +
-                           '<td style = "background-color:' + color + '">' + itemData.fechaFinFrecuente + '</td>' +
-                           '<td style = "background-color:' + color + '">' + frecuenteV + '</td>' +
-                           '</tr>';
+                        var htmlTags = htmlTags + '<tr>' +
+                            '<td style = "background-color:' + color + '">' + itemData.cedula + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.nombre + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.arl + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.empleadoAutoriza + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.motivoVisita + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.empresa + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.placa + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.fechaIniFrecuente + '</td>' +
+                            '<td style = "background-color:' + color + '">' + itemData.fechaFinFrecuente + '</td>' +
+                            '<td style = "background-color:' + color + '">' + frecuenteV + '</td>' +
+                            '</tr>';
 
-                       $('#TResultado tbody').append(htmlTags);
+                        $('#TResultado tbody').append(htmlTags);
 
-                   });
+                    });
 
-                      table = $('#TResultado').DataTable();
-                      table.destroy();
+                    table = $('#TResultado').DataTable();
+                    table.destroy();
 
-                      $('#TResultado').DataTable({
-                          "scrollY": "500px",
-                          "paging": true,
-                          "scrollX": false,
-                          "scrollCollapse": true,
-                          dom: 'Bfrtip',
-                          buttons: [
-                              {
+                    $('#TResultado').DataTable({
+                        "scrollY": "400px",
+                        "paging": true,
+                        "scrollX": true,
+                        "scrollCollapse": true,
+                        dom: 'Bfrtip',
+                        buttons: [{
 
-                                  extend:'excel',
-                                  className: "btn btn-primary"
+                            extend: 'excel',
+                            className: 'btn btn-primary'
 
-                              },
-                              
-                          ],
-                          //"order": [[1, "asc"]],
-                          //columnDefs: [{
-                          //    orderable: false,
-                          //    //className: 'select-checkbox',
-                          //    //style: 'cell-border',
-                          //    //targets: 0
-                          //}],
-                          //select: {
-                          //    style: 'so',
-                          //    selector: 'td:first-child'
-                          //}
+                        }
+                        ],
+                        //"order": [[0, "asc"]]
+                        //responsive: true
+                        //"order": [[1, "asc"]],
+                        //columnDefs: [{
+                        //    orderable: false,
+                        //    //className: 'select-checkbox',
+                        //    //style: 'cell-border',
+                        //    //targets: 0
+                        //}],
+                        //select: {
+                        //    style: 'so',
+                        //    selector: 'td:first-child'
+                        //}
 
-                      });
+                    });
+                        
+                }
+                else {
 
-              },
+                    alert("No tiene el perfil para esta operación.")
+                    swal("Oops", data, "error")
+                }
 
-                error: function (request, message, error) {
-                    alert(message);
-                      }
-              });
+
+
+            },
+            error: function (request, message, error) {
+                document.getElementById("loader").style.display = "none";
+                swal("Información", "Usuario no permitido para realizar esta acción.", "info");
+            }
+
+            //error: swal("Información", "Usuario no permitido para realizar esta acción.", "info"),
+            //error: function (request, message, error) {
+            //    alert(message);
+            //}
+          });
 
 
     }
@@ -384,7 +234,7 @@
 
         $("#Upload").click(function () {
             //e.preventDefault();
-            
+
             var totalFiles = document.getElementById("FileUpload1").files.length;
             if (totalFiles == 0) {
 
@@ -415,13 +265,14 @@
                     success: function (response) {
                         //showMessage(myMessages[3]);
                         //CargarVisitanteFrecuente();
-
+                       
                     },
-                    error: function (xhr, textStatus, error) {
-                        console.log(xhr.statusText);
-                        console.log(textStatus);
-                        console.log(error);
-                    }
+                    //error: swal("Información", "Usuario no permitido para realizar esta acción.", "info")
+                    //error: function (xhr, textStatus, error) {
+                    //    console.log(xhr.statusText);
+                    //    console.log(textStatus);
+                    //    console.log(error);
+                    //}
                 });
             }
 
